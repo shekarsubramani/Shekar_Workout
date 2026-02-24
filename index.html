@@ -16,81 +16,89 @@
         .container { padding: 20px; max-width: 500px; margin: 0 auto; padding-bottom: 100px; }
         
         /* Splash Screen */
-        #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--primary); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 3000; transition: opacity 0.6s ease; }
+        #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--primary); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 5000; transition: opacity 0.6s ease; }
         .dumbbell-logo { font-size: 80px; margin-bottom: 20px; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         
-        /* Layout Components */
+        /* Layout */
         .card { background: var(--card); padding: 20px; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid var(--border); margin-bottom: 15px; width: 100%; }
         .hidden { display: none !important; }
-        .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; width: 100%; }
         
-        /* SVG Profile Icon */
-        .profile-trigger { cursor: pointer; background: #e2e8f0; width: 42px; height: 42px; display: flex; justify-content: center; align-items: center; border-radius: 12px; transition: 0.2s; }
-        .profile-trigger:active { transform: scale(0.9); background: #cbd5e1; }
-        .profile-icon-svg { width: 24px; height: 24px; stroke: var(--primary); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
-        
-        /* Stats Grid */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 5px; width: 100%; }
+        /* Header */
+        .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; width: 100%; }
+        .profile-trigger { cursor: pointer; background: #e2e8f0; width: 42px; height: 42px; display: flex; justify-content: center; align-items: center; border-radius: 12px; }
+        .profile-icon-svg { width: 22px; height: 22px; stroke: var(--primary); stroke-width: 2; fill: none; }
+
+        /* Stats */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 5px; }
         .stat-box { background: white; padding: 12px 5px; border-radius: 14px; text-align: center; border: 1px solid var(--border); }
         .stat-label { font-size: 0.65rem; color: #64748b; text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 4px; }
         .stat-value { font-size: 1rem; font-weight: 800; color: var(--text); }
 
-        /* Form Controls */
-        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid var(--border); border-radius: 10px; font-size: 1rem; font-family: inherit; outline: none; transition: border 0.2s; }
-        input:focus { border-color: var(--accent); }
-        button { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 1rem; margin-top: 5px; }
-        
-        .workout-box { background: #f1f5f9; border-left: 4px solid var(--accent); padding: 15px; border-radius: 6px; margin-top: 12px; white-space: pre-line; font-size: 0.9rem; line-height: 1.6; }
-        
-        /* Modal Overlay */
-        #profile-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); display: flex; justify-content: center; align-items: center; z-index: 2000; backdrop-filter: blur(4px); }
-        .modal-content { background: white; width: 90%; max-width: 380px; padding: 25px; border-radius: 20px; position: relative; }
-        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #94a3b8; line-height: 1; }
+        /* Daily Check-in Interactive Items */
+        .checkin-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #f1f5f9; border-radius: 12px; margin-bottom: 10px; cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
+        .checkin-item:active { background: #e2e8f0; transform: scale(0.98); }
+        .checkin-info { display: flex; flex-direction: column; }
+        .checkin-title { font-size: 0.9rem; font-weight: 700; color: var(--primary); }
+        .checkin-duration { font-size: 0.75rem; color: #64748b; margin-top: 2px; }
+        .chevron { color: var(--accent); font-weight: bold; font-size: 1.2rem; }
 
-        /* Bottom Navigation */
+        /* Detail Pages */
+        .detail-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 4000; padding: 25px; overflow-y: auto; }
+        .back-nav { display: flex; align-items: center; gap: 10px; margin-bottom: 25px; cursor: pointer; color: var(--accent); font-weight: 700; }
+        .detail-content h2 { margin-top: 0; font-size: 1.4rem; color: var(--primary); }
+        .detail-list { padding: 0; list-style: none; }
+        .detail-list li { background: white; padding: 15px; border-radius: 12px; margin-bottom: 12px; border: 1px solid var(--border); line-height: 1.5; font-size: 0.95rem; }
+        .detail-list b { color: var(--accent); display: block; margin-bottom: 4px; }
+
+        /* Forms & Buttons */
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid var(--border); border-radius: 10px; font-size: 1rem; font-family: inherit; }
+        button { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; }
+        .workout-box { background: #f1f5f9; border-left: 4px solid var(--accent); padding: 15px; border-radius: 6px; margin-top: 12px; white-space: pre-line; font-size: 0.9rem; line-height: 1.6; }
+
+        /* Navigation */
         .nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: white; display: flex; border-top: 1px solid var(--border); left: 50%; transform: translateX(-50%); z-index: 1000; height: 70px; align-items: center; }
-        .nav-item { flex: 1; text-align: center; cursor: pointer; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-item { flex: 1; text-align: center; cursor: pointer; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; }
         .nav-item.active { color: var(--accent); }
-        
-        /* Toast Notifications */
-        #toast { visibility: hidden; min-width: 200px; background: #334155; color: white; text-align: center; border-radius: 12px; padding: 14px; position: fixed; left: 50%; bottom: 85px; transform: translateX(-50%); z-index: 4000; font-weight: 600; font-size: 0.9rem; }
-        #toast.show { visibility: visible; animation: slideup 0.4s forwards, fadeout 0.4s 2.6s forwards; }
+
+        /* Toast */
+        #toast { visibility: hidden; min-width: 200px; background: #334155; color: white; text-align: center; border-radius: 12px; padding: 14px; position: fixed; left: 50%; bottom: 85px; transform: translateX(-50%); z-index: 6000; font-weight: 600; }
+        #toast.show { visibility: visible; animation: slideup 0.4s forwards; }
         @keyframes slideup { from { bottom: 0; opacity: 0; } to { bottom: 85px; opacity: 1; } }
-        @keyframes fadeout { from { opacity: 1; } to { opacity: 0; } }
     </style>
 </head>
 <body>
 
 <div id="splash-screen">
     <div class="dumbbell-logo">🏋️‍♂️</div>
-    <h2 style="color:white; font-weight:300; letter-spacing:4px; margin:0;">CORE FIT</h2>
+    <h2 style="color:white; font-weight:300; letter-spacing:4px;">CORE FIT</h2>
 </div>
 
 <div id="toast">Success!</div>
 
-<div id="profile-modal" class="hidden">
-    <div class="modal-content">
-        <span class="close-btn" onclick="toggleProfile()">&times;</span>
+<div id="detail-view" class="detail-page hidden">
+    <div class="back-nav" onclick="closeDetail()">← Back to Home</div>
+    <div id="detail-body" class="detail-content"></div>
+</div>
+
+<div id="profile-modal" class="hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.6); display:flex; justify-content:center; align-items:center; z-index:4500; backdrop-filter:blur(4px);">
+    <div class="modal-content" style="background:white; width:90%; max-width:380px; padding:25px; border-radius:20px; position:relative;">
+        <span style="position:absolute; top:15px; right:20px; font-size:28px; cursor:pointer;" onclick="toggleProfile()">&times;</span>
         <h3 style="margin-top:0">Profile Settings</h3>
-        <label style="font-size:0.75rem; font-weight:700; color:#64748b; text-transform:uppercase;">Name</label>
-        <input type="text" id="edit-name">
-        <label style="font-size:0.75rem; font-weight:700; color:#64748b; text-transform:uppercase;">Weight (kg)</label>
-        <input type="number" id="edit-weight">
-        <label style="font-size:0.75rem; font-weight:700; color:#64748b; text-transform:uppercase;">Height (cm)</label>
-        <input type="number" id="edit-height">
+        <label style="font-size:0.75rem; font-weight:700; color:#64748b;">NAME</label><input type="text" id="edit-name">
+        <label style="font-size:0.75rem; font-weight:700; color:#64748b;">WEIGHT (kg)</label><input type="number" id="edit-weight">
+        <label style="font-size:0.75rem; font-weight:700; color:#64748b;">HEIGHT (cm)</label><input type="number" id="edit-height">
         <button onclick="updateProfile()" style="background:var(--success); margin-top:10px;">Save Profile</button>
     </div>
 </div>
 
 <div class="container">
     <div id="setup-screen" class="card hidden">
-        <h2 style="margin-top:0">Setup Profile</h2>
-        <p style="color:#64748b; font-size:0.85rem; margin-bottom:15px;">Enter your details to initialize your plan.</p>
+        <h2 style="margin-top:0">Welcome to CoreFit</h2>
         <input type="text" id="setup-name" placeholder="Full Name">
         <input type="number" id="setup-weight" placeholder="Weight (kg)">
         <input type="number" id="setup-height" placeholder="Height (cm)">
-        <button onclick="saveInitialProfile()">Create My Hub</button>
+        <button onclick="saveInitialProfile()">Start My Hub</button>
     </div>
 
     <div id="main-app" class="hidden">
@@ -100,10 +108,7 @@
                 <h1 id="welcome-msg" style="margin:2px 0 0 0; font-size:1.4rem;">User</h1>
             </div>
             <div class="profile-trigger" onclick="toggleProfile()">
-                <svg class="profile-icon-svg" viewBox="0 0 24 24">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                </svg>
+                <svg class="profile-icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             </div>
         </div>
 
@@ -114,24 +119,43 @@
         </div>
 
         <div id="home-view">
-            <div class="card" style="margin-top:15px;">
-                <h3 style="margin:0 0 15px 0; font-size:1rem; text-transform:uppercase; letter-spacing:0.5px;">Daily Checklist</h3>
-                <div style="display:flex; flex-direction:column; gap:12px;">
-                    <label style="display:flex; align-items:center; gap:10px; font-size:0.9rem;"><input type="checkbox" style="width:18px; height:18px; margin:0;"> 5m Static Stretching</label>
-                    <label style="display:flex; align-items:center; gap:10px; font-size:0.9rem;"><input type="checkbox" style="width:18px; height:18px; margin:0;"> 30m Treadmill Walk</label>
-                    <label style="display:flex; align-items:center; gap:10px; font-size:0.9rem;"><input type="checkbox" style="width:18px; height:18px; margin:0;"> HIIT Intensity Bursts</label>
+            <div class="card" style="margin-top:15px; border:none; padding:10px 0; background:transparent;">
+                <h3 style="margin:0 0 15px 0; font-size:1rem; text-transform:uppercase; letter-spacing:0.5px;">Daily Check-in</h3>
+                
+                <div class="checkin-item" onclick="openDetail('stretching')">
+                    <div class="checkin-info">
+                        <span class="checkin-title">Stretching Exercises</span>
+                        <span class="checkin-duration">⏱ 10 mins</span>
+                    </div>
+                    <span class="chevron">›</span>
+                </div>
+
+                <div class="checkin-item" onclick="openDetail('hiit')">
+                    <div class="checkin-info">
+                        <span class="checkin-title">High-Intensity Exercises</span>
+                        <span class="checkin-duration">⏱ 20 mins</span>
+                    </div>
+                    <span class="chevron">›</span>
+                </div>
+
+                <div class="checkin-item" onclick="openDetail('treadmill')">
+                    <div class="checkin-info">
+                        <span class="checkin-title">Treadmill Brisk Walk</span>
+                        <span class="checkin-duration">⏱ 30 to 60 mins</span>
+                    </div>
+                    <span class="chevron">›</span>
                 </div>
             </div>
 
             <div class="card">
                 <div style="display:flex; justify-content:space-between; align-items:center">
-                    <h3 style="margin:0; font-size:1rem; text-transform:uppercase;">Today: <span id="muscle-group" style="color:var(--accent)"></span></h3>
+                    <h3 style="margin:0; font-size:1rem; text-transform:uppercase;">Target: <span id="muscle-group" style="color:var(--accent)"></span></h3>
                     <span style="font-size:0.7rem; color:var(--accent); cursor:pointer; font-weight:800; border:1.5px solid var(--accent); padding:3px 8px; border-radius:6px;" onclick="toggleEdit()">EDIT</span>
                 </div>
                 <div id="workout-display" class="workout-box"></div>
                 <div id="edit-area" class="hidden" style="margin-top:10px;">
                     <textarea id="custom-workout-input" rows="6"></textarea>
-                    <button style="background:var(--success); margin-top:5px;" onclick="saveCustomWorkout()">Save Changes</button>
+                    <button style="background:var(--success); margin-top:5px;" onclick="saveCustomWorkout()">Save Plan Changes</button>
                 </div>
             </div>
 
@@ -155,6 +179,42 @@
 </div>
 
 <script>
+    const detailData = {
+        stretching: {
+            title: "Key Stretching Exercises & Techniques",
+            list: [
+                { b: "Hamstring Stretch", p: "Sit on the floor, extend one leg, and reach forward, or stand and hinge at the hips." },
+                { b: "Quadriceps Stretch", p: "Stand near a wall for balance, grab your ankle, and gently pull your heel toward your glutes." },
+                { b: "Neck Stretch", p: "Gently tilt your head toward your shoulder, applying slight pressure with your hand." },
+                { b: "Shoulder Stretch", p: "Pull one arm across your chest, or do a triceps stretch by pulling the elbow behind your head." },
+                { b: "Cat-Cow Stretch", p: "On hands and knees, alternate between arching and rounding your back to mobilize the spine." },
+                { b: "Knee-to-Chest", p: "Lie on your back and pull one knee toward your chest to relieve lower back tension." },
+                { b: "Hip Flexor Lunge", p: "Kneel on one knee, push forward slightly, and tighten the glutes of the back leg." },
+                { b: "Child’s Pose", p: "From a kneeling position, sit back on your heels and extend your arms forward on the floor." }
+            ]
+        },
+        hiit: {
+            title: "HIIT: Key Aspects and Examples",
+            list: [
+                { b: "Definition", p: "HIIT alternates between intense, high-heart-rate activity and low-intensity rest or recovery." },
+                { b: "Examples", p: "Sprinting, cycling, rowing, jump squats, burpees, mountain climbers, and kettlebell swings." },
+                { b: "Structure", p: "A typical session might be 30 seconds of maximum effort followed by 60-90 seconds of rest, repeated for 10-20 minutes." },
+                { b: "Benefits", p: "Highly time-efficient, improves cardiovascular health, and helps reduce visceral fat." },
+                { b: "Frequency", p: "Generally recommended 2-3 days per week to allow for proper recovery." }
+            ]
+        },
+        treadmill: {
+            title: "Treadmill Brisk Walk Components",
+            list: [
+                { b: "Speed", p: "Generally 3.0–3.5 mph for beginners, or up to 4.0+ mph for higher fitness levels." },
+                { b: "Incline", p: "Set to 1.0–2.0% to mimic the effort of outdoor walking." },
+                { b: "Duration", p: "Aim for 30–60 minutes, 5 times per week." },
+                { b: "Form", p: "Maintain an upright posture, engage your core, and swing arms naturally." },
+                { b: "Goal", p: "Reach a pace of at least 100 steps per minute, or a heart rate of 64-76% of your max." }
+            ]
+        }
+    };
+
     const schedule = {
         "Monday": { area: "Chest", plan: "• Seated Machine Press (3x12)\n• Pec Deck Fly (3x15)\n• Incline Machine Press (3x12)\n• Low-to-High Cable Fly (3x15)\n• Kneeling Pushups (2 sets)" },
         "Tuesday": { area: "Back", plan: "• Lat Pulldown (Wide) (3x12)\n• Seated Cable Row (3x12)\n• Machine Assisted Pullups (3x10)\n• Face Pulls (3x15)\n• One-Arm DB Row (3x12)" },
@@ -162,7 +222,7 @@
         "Thursday": { area: "Triceps & Abs", plan: "• Rope Pushdowns (3x15)\n• Overhead Machine Ext (3x12)\n• Bench Dips (3x12)\n• Seated Leg Tucks (4x20)\n• Plank (3x45s)" },
         "Friday": { area: "Shoulders", plan: "• Seated Machine Press (3x12)\n• Lateral Raises (3x15)\n• Rear Delt Fly (3x12)\n• DB Front Raises (3x12)\n• DB Shrugs (3x15)" },
         "Saturday": { area: "Legs", plan: "• Seated Leg Press (4x15)\n• Leg Extensions (3x12)\n• Seated Leg Curls (3x12)\n• Machine Calf Raises (4x20)\n• Wall Sits (3x30s)" },
-        "Sunday": { area: "Rest", plan: "• 20 min Recovery Walk\n• Full Body Static Stretch\n• Foam Rolling\n• Plan Next Week Meals" }
+        "Sunday": { area: "Rest", plan: "• 20 min Recovery Walk\n• Full Body Static Stretch\n• Foam Rolling" }
     };
 
     let data = JSON.parse(localStorage.getItem('workoutAppData')) || null;
@@ -184,14 +244,21 @@
         document.getElementById('main-app').classList.remove('hidden');
         const now = new Date();
         const todayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(now);
-        document.getElementById('day-header').innerText = `${todayName}, ${now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+        document.getElementById('day-header').innerText = `${todayName}, ${now.toLocaleDateString()}`;
         document.getElementById('welcome-msg').innerText = `Hello, ${data.name.split(' ')[0]}`;
         updateStats();
         document.getElementById('muscle-group').innerText = schedule[todayName].area;
-        const currentPlan = data.customPlans?.[todayName] || schedule[todayName].plan;
-        document.getElementById('workout-display').innerText = currentPlan;
-        document.getElementById('custom-workout-input').value = currentPlan;
+        document.getElementById('workout-display').innerText = data.customPlans?.[todayName] || schedule[todayName].plan;
     }
+
+    function openDetail(key) {
+        const item = detailData[key];
+        const body = document.getElementById('detail-body');
+        body.innerHTML = `<h2>${item.title}</h2><ul class="detail-list">${item.list.map(l => `<li><b>${l.b}</b>${l.p}</li>`).join('')}</ul>`;
+        document.getElementById('detail-view').classList.remove('hidden');
+    }
+
+    function closeDetail() { document.getElementById('detail-view').classList.add('hidden'); }
 
     function updateStats() {
         const bmi = (data.weight / ((data.height/100)**2)).toFixed(1);
@@ -223,45 +290,43 @@
         data.name = document.getElementById('edit-name').value;
         data.weight = parseFloat(document.getElementById('edit-weight').value);
         data.height = parseFloat(document.getElementById('edit-height').value);
-        save(); init(); toggleProfile(); showToast("Profile Updated! ✅");
+        save(); init(); toggleProfile(); showToast("Updated! ✅");
     }
 
-    function addWater() { data.water = (data.water || 0) + 1; save(); updateStats(); showToast("Logged Glass 💧"); }
-    
+    function addWater() { data.water = (data.water || 0) + 1; save(); updateStats(); showToast("Logged 💧"); }
     function promptWeight() {
         const nw = prompt("Weight (kg):");
         if(nw && !isNaN(nw)) {
             data.weight = parseFloat(nw);
             data.history.unshift({ date: new Date().toLocaleDateString(), info: `Weight: ${nw}kg` });
-            save(); updateStats(); showToast("Logged Weight! ⚖️");
+            save(); updateStats(); showToast("Logged ⚖️");
         }
     }
-
     function showToast(msg) {
         const t = document.getElementById("toast");
-        t.innerText = msg;
-        t.className = "show";
+        t.innerText = msg; t.className = "show";
         setTimeout(() => t.className = "", 3000);
     }
-
-    function toggleEdit() { document.getElementById('edit-area').classList.toggle('hidden'); }
+    function toggleEdit() { 
+        document.getElementById('edit-area').classList.toggle('hidden'); 
+        const todayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(new Date());
+        document.getElementById('custom-workout-input').value = data.customPlans?.[todayName] || schedule[todayName].plan;
+    }
     function saveCustomWorkout() {
         const todayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(new Date());
         if(!data.customPlans) data.customPlans = {};
         data.customPlans[todayName] = document.getElementById('custom-workout-input').value;
-        save(); init(); toggleEdit(); showToast("Saved! ✅");
+        save(); init(); toggleEdit(); showToast("Plan Saved! ✅");
     }
-
     function showView(view) {
         document.getElementById('home-view').classList.toggle('hidden', view !== 'home');
         document.getElementById('history-view').classList.toggle('hidden', view !== 'history');
         document.getElementById('nav-home').classList.toggle('active', view === 'home');
         document.getElementById('nav-logs').classList.toggle('active', view === 'history');
         if(view === 'history') {
-            document.getElementById('history-list').innerHTML = data.history.map(h => `<div class="workout-box" style="margin-bottom:12px; border-left-color:#94a3b8"><strong>${h.date}</strong><br>${h.info}</div>`).join('') || "<p style='text-align:center; color:#94a3b8; font-size:0.9rem;'>No logs yet.</p>";
+            document.getElementById('history-list').innerHTML = data.history.map(h => `<div class="workout-box" style="margin-bottom:12px; border-left-color:#94a3b8"><strong>${h.date}</strong><br>${h.info}</div>`).join('') || "<p style='text-align:center; color:#94a3b8;'>No logs yet.</p>";
         }
     }
-
     function save() { localStorage.setItem('workoutAppData', JSON.stringify(data)); }
     function resetAll() { if(confirm("Clear all data?")) { localStorage.clear(); location.reload(); } }
 </script>
