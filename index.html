@@ -8,11 +8,10 @@
         :root { 
             --bg: #f8fafc; --card: #ffffff; --text: #0f172a; 
             --primary: #1e293b; --accent: #2563eb; --border: #e2e8f0; 
-            --success: #10b981; --water: #0ea5e9; --danger: #ef4444;
+            --success: #10b981; --danger: #ef4444;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Inter', -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; overflow-x: hidden; }
-        
         .container { padding: 20px; max-width: 500px; margin: 0 auto; padding-bottom: 100px; }
         
         /* Splash Screen */
@@ -29,31 +28,33 @@
         .profile-trigger { cursor: pointer; background: #e2e8f0; width: 42px; height: 42px; display: flex; justify-content: center; align-items: center; border-radius: 12px; }
         .profile-icon-svg { width: 22px; height: 22px; stroke: var(--primary); stroke-width: 2; fill: none; }
 
-        /* Stats */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 5px; }
+        /* Stats (Two Columns now) */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 5px; }
         .stat-box { background: white; padding: 12px 5px; border-radius: 14px; text-align: center; border: 1px solid var(--border); }
         .stat-label { font-size: 0.65rem; color: #64748b; text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 4px; }
         .stat-value { font-size: 1rem; font-weight: 800; color: var(--text); }
 
         /* Daily Check-in Interactive Items */
-        .checkin-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #f1f5f9; border-radius: 12px; margin-bottom: 10px; cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
-        .checkin-item:active { background: #e2e8f0; transform: scale(0.98); }
-        .checkin-info { display: flex; flex-direction: column; }
-        .checkin-title { font-size: 0.9rem; font-weight: 700; color: var(--primary); }
+        .checkin-item { display: flex; align-items: center; padding: 15px; background: white; border-radius: 16px; margin-bottom: 12px; cursor: pointer; border: 1px solid var(--border); transition: 0.2s; gap: 15px; }
+        .checkin-item:active { background: #f1f5f9; transform: scale(0.98); }
+        .checkin-icon-box { background: #f8fafc; padding: 10px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+        .checkin-info { flex: 1; display: flex; flex-direction: column; }
+        .checkin-title { font-size: 0.95rem; font-weight: 700; color: var(--primary); }
         .checkin-duration { font-size: 0.75rem; color: #64748b; margin-top: 2px; }
-        .chevron { color: var(--accent); font-weight: bold; font-size: 1.2rem; }
+        .chevron { color: #cbd5e1; font-weight: bold; font-size: 1.2rem; }
 
         /* Detail Pages */
         .detail-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 4000; padding: 25px; overflow-y: auto; }
-        .back-nav { display: flex; align-items: center; gap: 10px; margin-bottom: 25px; cursor: pointer; color: var(--accent); font-weight: 700; }
-        .detail-content h2 { margin-top: 0; font-size: 1.4rem; color: var(--primary); }
+        .back-nav { display: flex; align-items: center; gap: 10px; margin-bottom: 25px; cursor: pointer; color: var(--accent); font-weight: 700; font-size: 0.9rem; }
+        .detail-content h2 { margin-top: 0; font-size: 1.4rem; color: var(--primary); margin-bottom: 20px; }
         .detail-list { padding: 0; list-style: none; }
-        .detail-list li { background: white; padding: 15px; border-radius: 12px; margin-bottom: 12px; border: 1px solid var(--border); line-height: 1.5; font-size: 0.95rem; }
-        .detail-list b { color: var(--accent); display: block; margin-bottom: 4px; }
+        .detail-list li { background: white; padding: 16px; border-radius: 14px; margin-bottom: 12px; border: 1px solid var(--border); line-height: 1.5; font-size: 0.9rem; display: flex; gap: 12px; align-items: flex-start; }
+        .detail-list b { color: var(--text); display: block; margin-bottom: 4px; font-size: 0.95rem; }
+        .li-icon { min-width: 20px; margin-top: 3px; }
 
         /* Forms & Buttons */
         input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid var(--border); border-radius: 10px; font-size: 1rem; font-family: inherit; }
-        button { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; }
+        button { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; }
         .workout-box { background: #f1f5f9; border-left: 4px solid var(--accent); padding: 15px; border-radius: 6px; margin-top: 12px; white-space: pre-line; font-size: 0.9rem; line-height: 1.6; }
 
         /* Navigation */
@@ -77,7 +78,7 @@
 <div id="toast">Success!</div>
 
 <div id="detail-view" class="detail-page hidden">
-    <div class="back-nav" onclick="closeDetail()">← Back to Home</div>
+    <div class="back-nav" onclick="closeDetail()">← BACK TO DASHBOARD</div>
     <div id="detail-body" class="detail-content"></div>
 </div>
 
@@ -94,11 +95,11 @@
 
 <div class="container">
     <div id="setup-screen" class="card hidden">
-        <h2 style="margin-top:0">Welcome to CoreFit</h2>
+        <h2 style="margin-top:0">Profile Setup</h2>
         <input type="text" id="setup-name" placeholder="Full Name">
         <input type="number" id="setup-weight" placeholder="Weight (kg)">
         <input type="number" id="setup-height" placeholder="Height (cm)">
-        <button onclick="saveInitialProfile()">Start My Hub</button>
+        <button onclick="saveInitialProfile()">Initialize My Plan</button>
     </div>
 
     <div id="main-app" class="hidden">
@@ -114,55 +115,54 @@
 
         <div class="stats-grid">
             <div class="stat-box"><span class="stat-label">BMI</span><span id="bmi-val" class="stat-value">--</span></div>
-            <div class="stat-box"><span class="stat-label">Weight</span><span id="weight-val" class="stat-value">--</span></div>
-            <div class="stat-box"><span class="stat-label">Water</span><span id="water-val" class="stat-value">0</span></div>
+            <div class="stat-box"><span class="stat-label">Current Weight</span><span id="weight-val" class="stat-value">--</span></div>
         </div>
 
         <div id="home-view">
-            <div class="card" style="margin-top:15px; border:none; padding:10px 0; background:transparent;">
-                <h3 style="margin:0 0 15px 0; font-size:1rem; text-transform:uppercase; letter-spacing:0.5px;">Daily Check-in</h3>
+            <div style="margin-top:20px;">
+                <h3 style="margin:0 0 15px 0; font-size:0.85rem; text-transform:uppercase; letter-spacing:1px; color:#64748b;">Daily Check-in</h3>
                 
                 <div class="checkin-item" onclick="openDetail('stretching')">
+                    <div class="checkin-icon-box">🧘‍♂️</div>
                     <div class="checkin-info">
                         <span class="checkin-title">Stretching Exercises</span>
-                        <span class="checkin-duration">⏱ 10 mins</span>
+                        <span class="checkin-duration">10 mins Focus</span>
                     </div>
                     <span class="chevron">›</span>
                 </div>
 
                 <div class="checkin-item" onclick="openDetail('hiit')">
+                    <div class="checkin-icon-box">⚡</div>
                     <div class="checkin-info">
                         <span class="checkin-title">High-Intensity Exercises</span>
-                        <span class="checkin-duration">⏱ 20 mins</span>
+                        <span class="checkin-duration">20 mins Burst</span>
                     </div>
                     <span class="chevron">›</span>
                 </div>
 
                 <div class="checkin-item" onclick="openDetail('treadmill')">
+                    <div class="checkin-icon-box">👟</div>
                     <div class="checkin-info">
                         <span class="checkin-title">Treadmill Brisk Walk</span>
-                        <span class="checkin-duration">⏱ 30 to 60 mins</span>
+                        <span class="checkin-duration">30 - 60 mins Pace</span>
                     </div>
                     <span class="chevron">›</span>
                 </div>
             </div>
 
-            <div class="card">
+            <div class="card" style="margin-top:10px;">
                 <div style="display:flex; justify-content:space-between; align-items:center">
-                    <h3 style="margin:0; font-size:1rem; text-transform:uppercase;">Target: <span id="muscle-group" style="color:var(--accent)"></span></h3>
+                    <h3 style="margin:0; font-size:1rem; text-transform:uppercase;">Plan: <span id="muscle-group" style="color:var(--accent)"></span></h3>
                     <span style="font-size:0.7rem; color:var(--accent); cursor:pointer; font-weight:800; border:1.5px solid var(--accent); padding:3px 8px; border-radius:6px;" onclick="toggleEdit()">EDIT</span>
                 </div>
                 <div id="workout-display" class="workout-box"></div>
                 <div id="edit-area" class="hidden" style="margin-top:10px;">
                     <textarea id="custom-workout-input" rows="6"></textarea>
-                    <button style="background:var(--success); margin-top:5px;" onclick="saveCustomWorkout()">Save Plan Changes</button>
+                    <button style="background:var(--success); margin-top:5px;" onclick="saveCustomWorkout()">Update Plan</button>
                 </div>
             </div>
 
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <button onclick="addWater()" style="background:var(--water); margin:0;">💧 Drink Water</button>
-                <button onclick="promptWeight()" style="background:var(--primary); margin:0;">⚖️ Log Weight</button>
-            </div>
+            <button onclick="promptWeight()" style="background:var(--primary); margin-top:5px;">⚖️ Log Weight Update</button>
         </div>
 
         <div id="history-view" class="hidden">
@@ -173,44 +173,44 @@
 </div>
 
 <div class="nav">
-    <div class="nav-item active" id="nav-home" onclick="showView('home')">Home</div>
-    <div class="nav-item" id="nav-logs" onclick="showView('history')">Logs</div>
+    <div class="nav-item active" id="nav-home" onclick="showView('home')">Dashboard</div>
+    <div class="nav-item" id="nav-logs" onclick="showView('history')">History</div>
     <div class="nav-item" style="color:var(--danger)" onclick="resetAll()">Reset</div>
 </div>
 
 <script>
     const detailData = {
         stretching: {
-            title: "Key Stretching Exercises & Techniques",
+            title: "Stretching Techniques",
             list: [
-                { b: "Hamstring Stretch", p: "Sit on the floor, extend one leg, and reach forward, or stand and hinge at the hips." },
-                { b: "Quadriceps Stretch", p: "Stand near a wall for balance, grab your ankle, and gently pull your heel toward your glutes." },
-                { b: "Neck Stretch", p: "Gently tilt your head toward your shoulder, applying slight pressure with your hand." },
-                { b: "Shoulder Stretch", p: "Pull one arm across your chest, or do a triceps stretch by pulling the elbow behind your head." },
-                { b: "Cat-Cow Stretch", p: "On hands and knees, alternate between arching and rounding your back to mobilize the spine." },
-                { b: "Knee-to-Chest", p: "Lie on your back and pull one knee toward your chest to relieve lower back tension." },
-                { b: "Hip Flexor Lunge", p: "Kneel on one knee, push forward slightly, and tighten the glutes of the back leg." },
-                { b: "Child’s Pose", p: "From a kneeling position, sit back on your heels and extend your arms forward on the floor." }
+                { i: "🦵", b: "Hamstring Stretch", p: "Sit on floor, extend one leg, reach forward. Keep back straight." },
+                { i: "🧘", b: "Quadriceps Stretch", p: "Stand near wall, pull heel toward glutes. Hold 30s per leg." },
+                { i: "👤", b: "Neck Stretch", p: "Gently tilt head toward shoulder. Do not force or jerk." },
+                { i: "💪", b: "Shoulder Stretch", p: "Pull arm across chest. Keep shoulder down and relaxed." },
+                { i: "🐄", b: "Cat-Cow Stretch", p: "On all fours, alternate arching and rounding your back." },
+                { i: "🛌", b: "Knee-to-Chest", p: "Lie on back, pull one knee toward chest. Relieves lower back." },
+                { i: "🏃", b: "Hip Flexor Lunge", p: "Kneel on one knee, push hips forward slightly." },
+                { i: "👶", b: "Child’s Pose", p: "Kneel, sit on heels, and reach arms forward on floor." }
             ]
         },
         hiit: {
-            title: "HIIT: Key Aspects and Examples",
+            title: "HIIT Methodology",
             list: [
-                { b: "Definition", p: "HIIT alternates between intense, high-heart-rate activity and low-intensity rest or recovery." },
-                { b: "Examples", p: "Sprinting, cycling, rowing, jump squats, burpees, mountain climbers, and kettlebell swings." },
-                { b: "Structure", p: "A typical session might be 30 seconds of maximum effort followed by 60-90 seconds of rest, repeated for 10-20 minutes." },
-                { b: "Benefits", p: "Highly time-efficient, improves cardiovascular health, and helps reduce visceral fat." },
-                { b: "Frequency", p: "Generally recommended 2-3 days per week to allow for proper recovery." }
+                { i: "💡", b: "Definition", p: "Alternating intense high-heart-rate activity with short recovery." },
+                { i: "🔥", b: "Examples", p: "Sprinting, jump squats, burpees, and mountain climbers." },
+                { i: "⏱", b: "Structure", p: "30s max effort, 60s rest. Repeat for 10-20 mins." },
+                { i: "❤️", b: "Benefits", p: "Time-efficient, improves heart health, reduces visceral fat." },
+                { i: "📅", b: "Frequency", p: "2-3 days per week recommended for proper recovery." }
             ]
         },
         treadmill: {
-            title: "Treadmill Brisk Walk Components",
+            title: "Brisk Walk Guidelines",
             list: [
-                { b: "Speed", p: "Generally 3.0–3.5 mph for beginners, or up to 4.0+ mph for higher fitness levels." },
-                { b: "Incline", p: "Set to 1.0–2.0% to mimic the effort of outdoor walking." },
-                { b: "Duration", p: "Aim for 30–60 minutes, 5 times per week." },
-                { b: "Form", p: "Maintain an upright posture, engage your core, and swing arms naturally." },
-                { b: "Goal", p: "Reach a pace of at least 100 steps per minute, or a heart rate of 64-76% of your max." }
+                { i: "⚡", b: "Speed", p: "3.0–3.5 mph (Beginners) to 4.0+ mph (Advanced)." },
+                { i: "📈", b: "Incline", p: "Set to 1.0–2.0% to mimic outdoor resistance." },
+                { i: "🕒", b: "Duration", p: "Aim for 30–60 minutes, 5 times per week." },
+                { i: "🚶", b: "Form", p: "Upright posture, engage core, swing arms naturally." },
+                { i: "🎯", b: "Goal", p: "Pace of 100+ steps/min or 64-76% of max heart rate." }
             ]
         }
     };
@@ -222,7 +222,7 @@
         "Thursday": { area: "Triceps & Abs", plan: "• Rope Pushdowns (3x15)\n• Overhead Machine Ext (3x12)\n• Bench Dips (3x12)\n• Seated Leg Tucks (4x20)\n• Plank (3x45s)" },
         "Friday": { area: "Shoulders", plan: "• Seated Machine Press (3x12)\n• Lateral Raises (3x15)\n• Rear Delt Fly (3x12)\n• DB Front Raises (3x12)\n• DB Shrugs (3x15)" },
         "Saturday": { area: "Legs", plan: "• Seated Leg Press (4x15)\n• Leg Extensions (3x12)\n• Seated Leg Curls (3x12)\n• Machine Calf Raises (4x20)\n• Wall Sits (3x30s)" },
-        "Sunday": { area: "Rest", plan: "• 20 min Recovery Walk\n• Full Body Static Stretch\n• Foam Rolling" }
+        "Sunday": { area: "Rest Day", plan: "• 20 min Recovery Walk\n• Full Body Stretching\n• Foam Rolling" }
     };
 
     let data = JSON.parse(localStorage.getItem('workoutAppData')) || null;
@@ -254,7 +254,7 @@
     function openDetail(key) {
         const item = detailData[key];
         const body = document.getElementById('detail-body');
-        body.innerHTML = `<h2>${item.title}</h2><ul class="detail-list">${item.list.map(l => `<li><b>${l.b}</b>${l.p}</li>`).join('')}</ul>`;
+        body.innerHTML = `<h2>${item.title}</h2><ul class="detail-list">${item.list.map(l => `<li><span class="li-icon">${l.i}</span><div><b>${l.b}</b>${l.p}</div></li>`).join('')}</ul>`;
         document.getElementById('detail-view').classList.remove('hidden');
     }
 
@@ -264,7 +264,6 @@
         const bmi = (data.weight / ((data.height/100)**2)).toFixed(1);
         document.getElementById('bmi-val').innerText = bmi;
         document.getElementById('weight-val').innerText = data.weight + "kg";
-        document.getElementById('water-val').innerText = data.water || 0;
     }
 
     function saveInitialProfile() {
@@ -272,8 +271,8 @@
         const h = parseFloat(document.getElementById('setup-height').value);
         const n = document.getElementById('setup-name').value;
         if(!n || isNaN(w) || isNaN(h)) return alert("Invalid inputs!");
-        data = { name: n, weight: w, height: h, history: [], customPlans: {}, water: 0 };
-        save(); init(); showToast("Profile Created! ✅");
+        data = { name: n, weight: w, height: h, history: [], customPlans: {} };
+        save(); init();
     }
 
     function toggleProfile() {
@@ -290,43 +289,47 @@
         data.name = document.getElementById('edit-name').value;
         data.weight = parseFloat(document.getElementById('edit-weight').value);
         data.height = parseFloat(document.getElementById('edit-height').value);
-        save(); init(); toggleProfile(); showToast("Updated! ✅");
+        save(); init(); toggleProfile(); showToast("Profile Updated! ✅");
     }
 
-    function addWater() { data.water = (data.water || 0) + 1; save(); updateStats(); showToast("Logged 💧"); }
     function promptWeight() {
         const nw = prompt("Weight (kg):");
         if(nw && !isNaN(nw)) {
             data.weight = parseFloat(nw);
-            data.history.unshift({ date: new Date().toLocaleDateString(), info: `Weight: ${nw}kg` });
+            data.history.unshift({ date: new Date().toLocaleDateString(), info: `Weight Update: ${nw}kg` });
             save(); updateStats(); showToast("Logged ⚖️");
         }
     }
+
     function showToast(msg) {
         const t = document.getElementById("toast");
         t.innerText = msg; t.className = "show";
         setTimeout(() => t.className = "", 3000);
     }
+
     function toggleEdit() { 
         document.getElementById('edit-area').classList.toggle('hidden'); 
         const todayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(new Date());
         document.getElementById('custom-workout-input').value = data.customPlans?.[todayName] || schedule[todayName].plan;
     }
+
     function saveCustomWorkout() {
         const todayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(new Date());
         if(!data.customPlans) data.customPlans = {};
         data.customPlans[todayName] = document.getElementById('custom-workout-input').value;
         save(); init(); toggleEdit(); showToast("Plan Saved! ✅");
     }
+
     function showView(view) {
         document.getElementById('home-view').classList.toggle('hidden', view !== 'home');
         document.getElementById('history-view').classList.toggle('hidden', view !== 'history');
         document.getElementById('nav-home').classList.toggle('active', view === 'home');
         document.getElementById('nav-logs').classList.toggle('active', view === 'history');
         if(view === 'history') {
-            document.getElementById('history-list').innerHTML = data.history.map(h => `<div class="workout-box" style="margin-bottom:12px; border-left-color:#94a3b8"><strong>${h.date}</strong><br>${h.info}</div>`).join('') || "<p style='text-align:center; color:#94a3b8;'>No logs yet.</p>";
+            document.getElementById('history-list').innerHTML = data.history.map(h => `<div class="workout-box" style="margin-bottom:12px; border-left-color:#94a3b8"><strong>${h.date}</strong><br>${h.info}</div>`).join('') || "<p style='text-align:center; color:#94a3b8;'>No history yet.</p>";
         }
     }
+
     function save() { localStorage.setItem('workoutAppData', JSON.stringify(data)); }
     function resetAll() { if(confirm("Clear all data?")) { localStorage.clear(); location.reload(); } }
 </script>
