@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CoreFit Hub</title>
+    <title>Shekar Workout Log</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root { 
             --bg: #f8fafc; --card: #ffffff; --text: #0f172a; 
@@ -28,42 +29,34 @@
         .profile-trigger { cursor: pointer; background: #e2e8f0; width: 42px; height: 42px; display: flex; justify-content: center; align-items: center; border-radius: 12px; }
         .profile-icon-svg { width: 22px; height: 22px; stroke: var(--primary); stroke-width: 2; fill: none; }
 
-        /* Stats (Two Columns now) */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 5px; }
+        /* Stats & Charts */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .stat-box { background: white; padding: 12px 5px; border-radius: 14px; text-align: center; border: 1px solid var(--border); }
         .stat-label { font-size: 0.65rem; color: #64748b; text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 4px; }
         .stat-value { font-size: 1rem; font-weight: 800; color: var(--text); }
+        .chart-container { background: white; border-radius: 16px; padding: 15px; border: 1px solid var(--border); margin-bottom: 15px; height: 220px; }
 
-        /* Daily Check-in Interactive Items */
-        .checkin-item { display: flex; align-items: center; padding: 15px; background: white; border-radius: 16px; margin-bottom: 12px; cursor: pointer; border: 1px solid var(--border); transition: 0.2s; gap: 15px; }
-        .checkin-item:active { background: #f1f5f9; transform: scale(0.98); }
-        .checkin-icon-box { background: #f8fafc; padding: 10px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+        /* Daily Check-in Items */
+        .checkin-item { display: flex; align-items: center; padding: 15px; background: white; border-radius: 16px; margin-bottom: 12px; cursor: pointer; border: 1px solid var(--border); gap: 15px; }
+        .checkin-icon-box { background: #f8fafc; padding: 10px; border-radius: 12px; }
         .checkin-info { flex: 1; display: flex; flex-direction: column; }
         .checkin-title { font-size: 0.95rem; font-weight: 700; color: var(--primary); }
-        .checkin-duration { font-size: 0.75rem; color: #64748b; margin-top: 2px; }
-        .chevron { color: #cbd5e1; font-weight: bold; font-size: 1.2rem; }
+        .chevron { color: #cbd5e1; font-weight: bold; }
 
         /* Detail Pages */
         .detail-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 4000; padding: 25px; overflow-y: auto; }
-        .back-nav { display: flex; align-items: center; gap: 10px; margin-bottom: 25px; cursor: pointer; color: var(--accent); font-weight: 700; font-size: 0.9rem; }
-        .detail-content h2 { margin-top: 0; font-size: 1.4rem; color: var(--primary); margin-bottom: 20px; }
+        .back-nav { display: flex; align-items: center; gap: 10px; margin-bottom: 25px; cursor: pointer; color: var(--accent); font-weight: 700; }
         .detail-list { padding: 0; list-style: none; }
-        .detail-list li { background: white; padding: 16px; border-radius: 14px; margin-bottom: 12px; border: 1px solid var(--border); line-height: 1.5; font-size: 0.9rem; display: flex; gap: 12px; align-items: flex-start; }
-        .detail-list b { color: var(--text); display: block; margin-bottom: 4px; font-size: 0.95rem; }
-        .li-icon { min-width: 20px; margin-top: 3px; }
+        .detail-list li { background: white; padding: 16px; border-radius: 14px; margin-bottom: 12px; border: 1px solid var(--border); display: flex; gap: 12px; }
 
-        /* Forms & Buttons */
-        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid var(--border); border-radius: 10px; font-size: 1rem; font-family: inherit; }
+        /* Global UI */
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid var(--border); border-radius: 10px; font-family: inherit; }
         button { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; }
-        .workout-box { background: #f1f5f9; border-left: 4px solid var(--accent); padding: 15px; border-radius: 6px; margin-top: 12px; white-space: pre-line; font-size: 0.9rem; line-height: 1.6; }
-
-        /* Navigation */
+        .workout-box { background: #f1f5f9; border-left: 4px solid var(--accent); padding: 15px; border-radius: 6px; margin-top: 12px; white-space: pre-line; font-size: 0.9rem; }
         .nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: white; display: flex; border-top: 1px solid var(--border); left: 50%; transform: translateX(-50%); z-index: 1000; height: 70px; align-items: center; }
         .nav-item { flex: 1; text-align: center; cursor: pointer; font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; }
         .nav-item.active { color: var(--accent); }
-
-        /* Toast */
-        #toast { visibility: hidden; min-width: 200px; background: #334155; color: white; text-align: center; border-radius: 12px; padding: 14px; position: fixed; left: 50%; bottom: 85px; transform: translateX(-50%); z-index: 6000; font-weight: 600; }
+        #toast { visibility: hidden; min-width: 200px; background: #334155; color: white; text-align: center; border-radius: 12px; padding: 14px; position: fixed; left: 50%; bottom: 85px; transform: translateX(-50%); z-index: 6000; }
         #toast.show { visibility: visible; animation: slideup 0.4s forwards; }
         @keyframes slideup { from { bottom: 0; opacity: 0; } to { bottom: 85px; opacity: 1; } }
     </style>
@@ -72,40 +65,40 @@
 
 <div id="splash-screen">
     <div class="dumbbell-logo">🏋️‍♂️</div>
-    <h2 style="color:white; font-weight:300; letter-spacing:4px;">CORE FIT</h2>
+    <h2 style="color:white; font-weight:300; letter-spacing:4px; text-align: center;">SHEKAR<br>WORKOUT LOG</h2>
 </div>
 
 <div id="toast">Success!</div>
 
 <div id="detail-view" class="detail-page hidden">
     <div class="back-nav" onclick="closeDetail()">← BACK TO DASHBOARD</div>
-    <div id="detail-body" class="detail-content"></div>
+    <div id="detail-body"></div>
 </div>
 
 <div id="profile-modal" class="hidden" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.6); display:flex; justify-content:center; align-items:center; z-index:4500; backdrop-filter:blur(4px);">
     <div class="modal-content" style="background:white; width:90%; max-width:380px; padding:25px; border-radius:20px; position:relative;">
         <span style="position:absolute; top:15px; right:20px; font-size:28px; cursor:pointer;" onclick="toggleProfile()">&times;</span>
-        <h3 style="margin-top:0">Profile Settings</h3>
-        <label style="font-size:0.75rem; font-weight:700; color:#64748b;">NAME</label><input type="text" id="edit-name">
-        <label style="font-size:0.75rem; font-weight:700; color:#64748b;">WEIGHT (kg)</label><input type="number" id="edit-weight">
-        <label style="font-size:0.75rem; font-weight:700; color:#64748b;">HEIGHT (cm)</label><input type="number" id="edit-height">
-        <button onclick="updateProfile()" style="background:var(--success); margin-top:10px;">Save Profile</button>
+        <h3>Profile Settings</h3>
+        <label>NAME</label><input type="text" id="edit-name">
+        <label>WEIGHT (kg)</label><input type="number" id="edit-weight">
+        <label>HEIGHT (cm)</label><input type="number" id="edit-height">
+        <button onclick="updateProfile()" style="background:var(--success)">Save Profile</button>
     </div>
 </div>
 
 <div class="container">
     <div id="setup-screen" class="card hidden">
-        <h2 style="margin-top:0">Profile Setup</h2>
+        <h2>Setup Log</h2>
         <input type="text" id="setup-name" placeholder="Full Name">
         <input type="number" id="setup-weight" placeholder="Weight (kg)">
         <input type="number" id="setup-height" placeholder="Height (cm)">
-        <button onclick="saveInitialProfile()">Initialize My Plan</button>
+        <button onclick="saveInitialProfile()">Start My Log</button>
     </div>
 
     <div id="main-app" class="hidden">
         <div class="header-section">
-            <div style="flex:1">
-                <div id="day-header" style="color:var(--accent); font-weight:800; font-size:0.75rem; text-transform:uppercase;"></div>
+            <div>
+                <div id="day-header" style="color:var(--accent); font-weight:800; font-size:0.75rem;"></div>
                 <h1 id="welcome-msg" style="margin:2px 0 0 0; font-size:1.4rem;">User</h1>
             </div>
             <div class="profile-trigger" onclick="toggleProfile()">
@@ -115,124 +108,83 @@
 
         <div class="stats-grid">
             <div class="stat-box"><span class="stat-label">BMI</span><span id="bmi-val" class="stat-value">--</span></div>
-            <div class="stat-box"><span class="stat-label">Current Weight</span><span id="weight-val" class="stat-value">--</span></div>
+            <div class="stat-box"><span class="stat-label">Weight</span><span id="weight-val" class="stat-value">--</span></div>
+        </div>
+
+        <div id="charts-wrapper">
+            <div class="chart-container">
+                <canvas id="weightChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <canvas id="bmiChart"></canvas>
+            </div>
         </div>
 
         <div id="home-view">
             <div style="margin-top:20px;">
-                <h3 style="margin:0 0 15px 0; font-size:0.85rem; text-transform:uppercase; letter-spacing:1px; color:#64748b;">Daily Check-in</h3>
-                
+                <h3 style="margin:0 0 15px 0; font-size:0.85rem; text-transform:uppercase; color:#64748b;">Daily Check-in</h3>
                 <div class="checkin-item" onclick="openDetail('stretching')">
                     <div class="checkin-icon-box">🧘‍♂️</div>
-                    <div class="checkin-info">
-                        <span class="checkin-title">Stretching Exercises</span>
-                        <span class="checkin-duration">10 mins Focus</span>
-                    </div>
+                    <div class="checkin-info"><span class="checkin-title">Stretching</span></div>
                     <span class="chevron">›</span>
                 </div>
-
                 <div class="checkin-item" onclick="openDetail('hiit')">
                     <div class="checkin-icon-box">⚡</div>
-                    <div class="checkin-info">
-                        <span class="checkin-title">High-Intensity Exercises</span>
-                        <span class="checkin-duration">20 mins Burst</span>
-                    </div>
+                    <div class="checkin-info"><span class="checkin-title">HIIT Exercise</span></div>
                     <span class="chevron">›</span>
                 </div>
-
                 <div class="checkin-item" onclick="openDetail('treadmill')">
                     <div class="checkin-icon-box">👟</div>
-                    <div class="checkin-info">
-                        <span class="checkin-title">Treadmill Brisk Walk</span>
-                        <span class="checkin-duration">30 - 60 mins Pace</span>
-                    </div>
+                    <div class="checkin-info"><span class="checkin-title">Treadmill Walk</span></div>
                     <span class="chevron">›</span>
                 </div>
             </div>
 
             <div class="card" style="margin-top:10px;">
                 <div style="display:flex; justify-content:space-between; align-items:center">
-                    <h3 style="margin:0; font-size:1rem; text-transform:uppercase;">Plan: <span id="muscle-group" style="color:var(--accent)"></span></h3>
+                    <h3 style="margin:0; font-size:1rem;">Plan: <span id="muscle-group" style="color:var(--accent)"></span></h3>
                     <span style="font-size:0.7rem; color:var(--accent); cursor:pointer; font-weight:800; border:1.5px solid var(--accent); padding:3px 8px; border-radius:6px;" onclick="toggleEdit()">EDIT</span>
                 </div>
                 <div id="workout-display" class="workout-box"></div>
                 <div id="edit-area" class="hidden" style="margin-top:10px;">
                     <textarea id="custom-workout-input" rows="6"></textarea>
-                    <button style="background:var(--success); margin-top:5px;" onclick="saveCustomWorkout()">Update Plan</button>
+                    <button style="background:var(--success)" onclick="saveCustomWorkout()">Update Plan</button>
                 </div>
             </div>
 
-            <button onclick="promptWeight()" style="background:var(--primary); margin-top:5px;">⚖️ Log Weight Update</button>
+            <button onclick="promptWeight()" style="background:var(--primary)">⚖️ Log Weight Update</button>
         </div>
 
         <div id="history-view" class="hidden">
-            <h3 style="margin-top:0; font-size:1rem; text-transform:uppercase;">Log History</h3>
+            <h3>Log History</h3>
             <div id="history-list"></div>
         </div>
     </div>
 </div>
 
 <div class="nav">
-    <div class="nav-item active" id="nav-home" onclick="showView('home')">Dashboard</div>
+    <div class="nav-item active" id="nav-home" onclick="showView('home')">Log</div>
     <div class="nav-item" id="nav-logs" onclick="showView('history')">History</div>
     <div class="nav-item" style="color:var(--danger)" onclick="resetAll()">Reset</div>
 </div>
 
 <script>
+    let weightChart, bmiChart;
     const detailData = {
-        stretching: {
-            title: "Stretching Techniques",
-            list: [
-                { i: "🦵", b: "Hamstring Stretch", p: "Sit on floor, extend one leg, reach forward. Keep back straight." },
-                { i: "🧘", b: "Quadriceps Stretch", p: "Stand near wall, pull heel toward glutes. Hold 30s per leg." },
-                { i: "👤", b: "Neck Stretch", p: "Gently tilt head toward shoulder. Do not force or jerk." },
-                { i: "💪", b: "Shoulder Stretch", p: "Pull arm across chest. Keep shoulder down and relaxed." },
-                { i: "🐄", b: "Cat-Cow Stretch", p: "On all fours, alternate arching and rounding your back." },
-                { i: "🛌", b: "Knee-to-Chest", p: "Lie on back, pull one knee toward chest. Relieves lower back." },
-                { i: "🏃", b: "Hip Flexor Lunge", p: "Kneel on one knee, push hips forward slightly." },
-                { i: "👶", b: "Child’s Pose", p: "Kneel, sit on heels, and reach arms forward on floor." }
-            ]
-        },
-        hiit: {
-            title: "HIIT Methodology",
-            list: [
-                { i: "💡", b: "Definition", p: "Alternating intense high-heart-rate activity with short recovery." },
-                { i: "🔥", b: "Examples", p: "Sprinting, jump squats, burpees, and mountain climbers." },
-                { i: "⏱", b: "Structure", p: "30s max effort, 60s rest. Repeat for 10-20 mins." },
-                { i: "❤️", b: "Benefits", p: "Time-efficient, improves heart health, reduces visceral fat." },
-                { i: "📅", b: "Frequency", p: "2-3 days per week recommended for proper recovery." }
-            ]
-        },
-        treadmill: {
-            title: "Brisk Walk Guidelines",
-            list: [
-                { i: "⚡", b: "Speed", p: "3.0–3.5 mph (Beginners) to 4.0+ mph (Advanced)." },
-                { i: "📈", b: "Incline", p: "Set to 1.0–2.0% to mimic outdoor resistance." },
-                { i: "🕒", b: "Duration", p: "Aim for 30–60 minutes, 5 times per week." },
-                { i: "🚶", b: "Form", p: "Upright posture, engage core, swing arms naturally." },
-                { i: "🎯", b: "Goal", p: "Pace of 100+ steps/min or 64-76% of max heart rate." }
-            ]
-        }
+        stretching: { title: "Stretching Techniques", list: [{i:"🦵",b:"Hamstring",p:"Sit on floor, extend leg, reach forward."},{i:"🧘",b:"Quadriceps",p:"Stand, pull heel toward glutes. Hold 30s."},{i:"👤",b:"Neck",p:"Gently tilt head toward shoulder."},{i:"💪",b:"Shoulder",p:"Pull arm across chest."},{i:"🐄",b:"Cat-Cow",p:"On all fours, arch and round back."},{i:"🛌",b:"Knee-to-Chest",p:"Lie on back, pull knee toward chest."},{i:"🏃",b:"Hip Flexor",p:"Kneel on one knee, push hips forward."},{i:"👶",b:"Child’s Pose",p:"Kneel, sit on heels, reach forward."}]},
+        hiit: { title: "HIIT Methodology", list: [{i:"💡",b:"Definition",p:"Intense bursts vs short recovery."},{i:"🔥",b:"Examples",p:"Sprinting, burpees, mountain climbers."},{i:"⏱",b:"Structure",p:"30s effort, 60s rest. 10-20 mins total."},{i:"❤️",b:"Benefits",p:"Heart health & visceral fat reduction."},{i:"📅",b:"Frequency",p:"2-3 days per week."}]},
+        treadmill: { title: "Brisk Walk Guidelines", list: [{i:"⚡",b:"Speed",p:"3.0–4.0+ mph depending on level."},{i:"📈",b:"Incline",p:"1.0–2.0% to mimic outdoor terrain."},{i:"🕒",b:"Duration",p:"30–60 mins, 5x per week."},{i:"🚶",b:"Form",p:"Upright core, natural arm swing."},{i:"🎯",b:"Goal",p:"100+ steps/min or 64-76% max HR."}]}
     };
 
-    const schedule = {
-        "Monday": { area: "Chest", plan: "• Seated Machine Press (3x12)\n• Pec Deck Fly (3x15)\n• Incline Machine Press (3x12)\n• Low-to-High Cable Fly (3x15)\n• Kneeling Pushups (2 sets)" },
-        "Tuesday": { area: "Back", plan: "• Lat Pulldown (Wide) (3x12)\n• Seated Cable Row (3x12)\n• Machine Assisted Pullups (3x10)\n• Face Pulls (3x15)\n• One-Arm DB Row (3x12)" },
-        "Wednesday": { area: "Biceps", plan: "• Seated DB Curls (3x12)\n• Hammer Curls (3x12)\n• EZ-Bar Preacher Curls (3x10)\n• Cable Rope Curls (3x15)\n• Concentration Curls (2x12)" },
-        "Thursday": { area: "Triceps & Abs", plan: "• Rope Pushdowns (3x15)\n• Overhead Machine Ext (3x12)\n• Bench Dips (3x12)\n• Seated Leg Tucks (4x20)\n• Plank (3x45s)" },
-        "Friday": { area: "Shoulders", plan: "• Seated Machine Press (3x12)\n• Lateral Raises (3x15)\n• Rear Delt Fly (3x12)\n• DB Front Raises (3x12)\n• DB Shrugs (3x15)" },
-        "Saturday": { area: "Legs", plan: "• Seated Leg Press (4x15)\n• Leg Extensions (3x12)\n• Seated Leg Curls (3x12)\n• Machine Calf Raises (4x20)\n• Wall Sits (3x30s)" },
-        "Sunday": { area: "Rest Day", plan: "• 20 min Recovery Walk\n• Full Body Stretching\n• Foam Rolling" }
-    };
+    const schedule = { "Monday": {area:"Chest",plan:"Seated Press 3x12\nPec Deck 3x15\nIncline Press 3x12\nCable Fly 3x15"}, "Tuesday": {area:"Back",plan:"Lat Pulldown 3x12\nCable Row 3x12\nAssisted Pullups 3x10\nFace Pulls 3x15"}, "Wednesday": {area:"Biceps",plan:"Seated Curls 3x12\nHammer Curls 3x12\nPreacher Curls 3x10\nCable Curls 3x15"}, "Thursday": {area:"Triceps/Abs",plan:"Rope Pushdowns 3x15\nOverhead Ext 3x12\nDips 3x12\nPlank 3x45s"}, "Friday": {area:"Shoulders",plan:"Machine Press 3x12\nLateral Raises 3x15\nRear Delt Fly 3x12\nShrugs 3x15"}, "Saturday": {area:"Legs",plan:"Leg Press 4x15\nLeg Extensions 3x12\nLeg Curls 3x12\nCalf Raises 4x20"}, "Sunday": {area:"Rest",plan:"Recovery Walk\nFull Body Stretch\nFoam Rolling"} };
 
     let data = JSON.parse(localStorage.getItem('workoutAppData')) || null;
 
     window.onload = function() {
         setTimeout(() => {
-            const splash = document.getElementById('splash-screen');
-            splash.style.opacity = '0';
+            document.getElementById('splash-screen').style.opacity = '0';
             setTimeout(() => {
-                splash.classList.add('hidden');
+                document.getElementById('splash-screen').classList.add('hidden');
                 if(!data) document.getElementById('setup-screen').classList.remove('hidden');
                 else init();
             }, 600);
@@ -249,16 +201,29 @@
         updateStats();
         document.getElementById('muscle-group').innerText = schedule[todayName].area;
         document.getElementById('workout-display').innerText = data.customPlans?.[todayName] || schedule[todayName].plan;
+        renderCharts();
     }
 
-    function openDetail(key) {
-        const item = detailData[key];
-        const body = document.getElementById('detail-body');
-        body.innerHTML = `<h2>${item.title}</h2><ul class="detail-list">${item.list.map(l => `<li><span class="li-icon">${l.i}</span><div><b>${l.b}</b>${l.p}</div></li>`).join('')}</ul>`;
-        document.getElementById('detail-view').classList.remove('hidden');
-    }
+    function renderCharts() {
+        const labels = [...data.history].reverse().map(h => h.date);
+        const weights = [...data.history].reverse().map(h => h.val);
+        const bmis = [...data.history].reverse().map(h => (h.val / ((data.height/100)**2)).toFixed(1));
 
-    function closeDetail() { document.getElementById('detail-view').classList.add('hidden'); }
+        if (weightChart) weightChart.destroy();
+        if (bmiChart) bmiChart.destroy();
+
+        weightChart = new Chart(document.getElementById('weightChart'), {
+            type: 'bar',
+            data: { labels, datasets: [{ label: 'Weight (kg)', data: weights, backgroundColor: '#2563eb', borderRadius: 5 }] },
+            options: { maintainAspectRatio: false, plugins: { legend: { display: false }, title: { display: true, text: 'Weight Progress' } } }
+        });
+
+        bmiChart = new Chart(document.getElementById('bmiChart'), {
+            type: 'line',
+            data: { labels, datasets: [{ label: 'BMI', data: bmis, borderColor: '#10b981', tension: 0.3, fill: true, backgroundColor: 'rgba(16, 185, 129, 0.1)' }] },
+            options: { maintainAspectRatio: false, plugins: { legend: { display: false }, title: { display: true, text: 'BMI Trend' } } }
+        });
+    }
 
     function updateStats() {
         const bmi = (data.weight / ((data.height/100)**2)).toFixed(1);
@@ -271,67 +236,62 @@
         const h = parseFloat(document.getElementById('setup-height').value);
         const n = document.getElementById('setup-name').value;
         if(!n || isNaN(w) || isNaN(h)) return alert("Invalid inputs!");
-        data = { name: n, weight: w, height: h, history: [], customPlans: {} };
+        data = { name: n, weight: w, height: h, history: [{date: new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short'}), val: w}], customPlans: {} };
         save(); init();
     }
 
-    function toggleProfile() {
-        const modal = document.getElementById('profile-modal');
-        if(modal.classList.contains('hidden')) {
+    function promptWeight() {
+        const nw = prompt("Update Weight (kg):");
+        if(nw && !isNaN(nw)) {
+            data.weight = parseFloat(nw);
+            data.history.push({ date: new Date().toLocaleDateString('en-GB', {day:'2-digit', month:'short'}), val: parseFloat(nw) });
+            if(data.history.length > 7) data.history.shift(); 
+            save(); updateStats(); renderCharts(); showToast("Logged ⚖️");
+        }
+    }
+
+    function openDetail(key) {
+        const item = detailData[key];
+        document.getElementById('detail-body').innerHTML = `<h2>${item.title}</h2><ul class="detail-list">${item.list.map(l => `<li><span>${l.i}</span><div><b>${l.b}</b>${l.p}</div></li>`).join('')}</ul>`;
+        document.getElementById('detail-view').classList.remove('hidden');
+    }
+
+    function closeDetail() { document.getElementById('detail-view').classList.add('hidden'); }
+    function toggleProfile() { 
+        const m = document.getElementById('profile-modal');
+        if(m.classList.contains('hidden')){
             document.getElementById('edit-name').value = data.name;
             document.getElementById('edit-weight').value = data.weight;
             document.getElementById('edit-height').value = data.height;
-            modal.classList.remove('hidden');
-        } else modal.classList.add('hidden');
+            m.classList.remove('hidden');
+        } else m.classList.add('hidden');
     }
-
     function updateProfile() {
         data.name = document.getElementById('edit-name').value;
         data.weight = parseFloat(document.getElementById('edit-weight').value);
         data.height = parseFloat(document.getElementById('edit-height').value);
-        save(); init(); toggleProfile(); showToast("Profile Updated! ✅");
+        save(); init(); toggleProfile(); showToast("Updated! ✅");
     }
-
-    function promptWeight() {
-        const nw = prompt("Weight (kg):");
-        if(nw && !isNaN(nw)) {
-            data.weight = parseFloat(nw);
-            data.history.unshift({ date: new Date().toLocaleDateString(), info: `Weight Update: ${nw}kg` });
-            save(); updateStats(); showToast("Logged ⚖️");
-        }
-    }
-
-    function showToast(msg) {
-        const t = document.getElementById("toast");
-        t.innerText = msg; t.className = "show";
-        setTimeout(() => t.className = "", 3000);
-    }
-
-    function toggleEdit() { 
-        document.getElementById('edit-area').classList.toggle('hidden'); 
-        const todayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(new Date());
-        document.getElementById('custom-workout-input').value = data.customPlans?.[todayName] || schedule[todayName].plan;
-    }
-
+    function showToast(msg) { const t = document.getElementById("toast"); t.innerText = msg; t.className = "show"; setTimeout(() => t.className = "", 3000); }
+    function toggleEdit() { document.getElementById('edit-area').classList.toggle('hidden'); }
     function saveCustomWorkout() {
         const todayName = new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(new Date());
         if(!data.customPlans) data.customPlans = {};
         data.customPlans[todayName] = document.getElementById('custom-workout-input').value;
-        save(); init(); toggleEdit(); showToast("Plan Saved! ✅");
+        save(); init(); toggleEdit();
     }
-
     function showView(view) {
         document.getElementById('home-view').classList.toggle('hidden', view !== 'home');
         document.getElementById('history-view').classList.toggle('hidden', view !== 'history');
+        document.getElementById('charts-wrapper').classList.toggle('hidden', view !== 'home');
         document.getElementById('nav-home').classList.toggle('active', view === 'home');
         document.getElementById('nav-logs').classList.toggle('active', view === 'history');
         if(view === 'history') {
-            document.getElementById('history-list').innerHTML = data.history.map(h => `<div class="workout-box" style="margin-bottom:12px; border-left-color:#94a3b8"><strong>${h.date}</strong><br>${h.info}</div>`).join('') || "<p style='text-align:center; color:#94a3b8;'>No history yet.</p>";
+            document.getElementById('history-list').innerHTML = data.history.map(h => `<div class="workout-box"><strong>${h.date}</strong>: ${h.val}kg</div>`).reverse().join('');
         }
     }
-
     function save() { localStorage.setItem('workoutAppData', JSON.stringify(data)); }
-    function resetAll() { if(confirm("Clear all data?")) { localStorage.clear(); location.reload(); } }
+    function resetAll() { if(confirm("Reset all data?")) { localStorage.clear(); location.reload(); } }
 </script>
 </body>
 </html>
