@@ -15,41 +15,36 @@
         body { font-family: 'Inter', -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; overflow-x: hidden; }
         .container { padding: 20px; max-width: 500px; margin: 0 auto; padding-bottom: 100px; }
         
-        /* Splash Screen */
         #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--primary); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 5000; transition: opacity 0.6s ease; }
         .dumbbell-logo { font-size: 80px; margin-bottom: 20px; animation: pulse 1.5s infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
         
-        /* Layout */
         .card { background: var(--card); padding: 20px; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid var(--border); margin-bottom: 15px; width: 100%; }
         .hidden { display: none !important; }
         
-        /* Header */
         .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; width: 100%; }
         .profile-trigger { cursor: pointer; background: #e2e8f0; width: 42px; height: 42px; display: flex; justify-content: center; align-items: center; border-radius: 12px; }
         .profile-icon-svg { width: 22px; height: 22px; stroke: var(--primary); stroke-width: 2; fill: none; }
 
-        /* Stats & Charts */
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .stat-box { background: white; padding: 12px 5px; border-radius: 14px; text-align: center; border: 1px solid var(--border); }
         .stat-label { font-size: 0.65rem; color: #64748b; text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 4px; }
         .stat-value { font-size: 1rem; font-weight: 800; color: var(--text); }
-        .chart-container { background: white; border-radius: 16px; padding: 15px; border: 1px solid var(--border); margin-bottom: 15px; height: 220px; }
+        
+        /* Updated single chart container */
+        .chart-container { background: white; border-radius: 16px; padding: 15px; border: 1px solid var(--border); margin-bottom: 15px; height: 280px; }
 
-        /* Daily Check-in Items */
         .checkin-item { display: flex; align-items: center; padding: 15px; background: white; border-radius: 16px; margin-bottom: 12px; cursor: pointer; border: 1px solid var(--border); gap: 15px; }
         .checkin-icon-box { background: #f8fafc; padding: 10px; border-radius: 12px; }
         .checkin-info { flex: 1; display: flex; flex-direction: column; }
         .checkin-title { font-size: 0.95rem; font-weight: 700; color: var(--primary); }
         .chevron { color: #cbd5e1; font-weight: bold; }
 
-        /* Detail Pages */
         .detail-page { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 4000; padding: 25px; overflow-y: auto; }
         .back-nav { display: flex; align-items: center; gap: 10px; margin-bottom: 25px; cursor: pointer; color: var(--accent); font-weight: 700; }
         .detail-list { padding: 0; list-style: none; }
         .detail-list li { background: white; padding: 16px; border-radius: 14px; margin-bottom: 12px; border: 1px solid var(--border); display: flex; gap: 12px; }
 
-        /* Global UI */
         input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid var(--border); border-radius: 10px; font-family: inherit; }
         button { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; }
         .workout-box { background: #f1f5f9; border-left: 4px solid var(--accent); padding: 15px; border-radius: 6px; margin-top: 12px; white-space: pre-line; font-size: 0.9rem; }
@@ -113,10 +108,7 @@
 
         <div id="charts-wrapper">
             <div class="chart-container">
-                <canvas id="weightChart"></canvas>
-            </div>
-            <div class="chart-container">
-                <canvas id="bmiChart"></canvas>
+                <canvas id="combinedChart"></canvas>
             </div>
         </div>
 
@@ -169,7 +161,7 @@
 </div>
 
 <script>
-    let weightChart, bmiChart;
+    let combinedChart;
     const detailData = {
         stretching: { title: "Stretching Techniques", list: [{i:"🦵",b:"Hamstring",p:"Sit on floor, extend leg, reach forward."},{i:"🧘",b:"Quadriceps",p:"Stand, pull heel toward glutes. Hold 30s."},{i:"👤",b:"Neck",p:"Gently tilt head toward shoulder."},{i:"💪",b:"Shoulder",p:"Pull arm across chest."},{i:"🐄",b:"Cat-Cow",p:"On all fours, arch and round back."},{i:"🛌",b:"Knee-to-Chest",p:"Lie on back, pull knee toward chest."},{i:"🏃",b:"Hip Flexor",p:"Kneel on one knee, push hips forward."},{i:"👶",b:"Child’s Pose",p:"Kneel, sit on heels, reach forward."}]},
         hiit: { title: "HIIT Methodology", list: [{i:"💡",b:"Definition",p:"Intense bursts vs short recovery."},{i:"🔥",b:"Examples",p:"Sprinting, burpees, mountain climbers."},{i:"⏱",b:"Structure",p:"30s effort, 60s rest. 10-20 mins total."},{i:"❤️",b:"Benefits",p:"Heart health & visceral fat reduction."},{i:"📅",b:"Frequency",p:"2-3 days per week."}]},
@@ -209,19 +201,63 @@
         const weights = [...data.history].reverse().map(h => h.val);
         const bmis = [...data.history].reverse().map(h => (h.val / ((data.height/100)**2)).toFixed(1));
 
-        if (weightChart) weightChart.destroy();
-        if (bmiChart) bmiChart.destroy();
+        if (combinedChart) combinedChart.destroy();
 
-        weightChart = new Chart(document.getElementById('weightChart'), {
-            type: 'bar',
-            data: { labels, datasets: [{ label: 'Weight (kg)', data: weights, backgroundColor: '#2563eb', borderRadius: 5 }] },
-            options: { maintainAspectRatio: false, plugins: { legend: { display: false }, title: { display: true, text: 'Weight Progress' } } }
-        });
-
-        bmiChart = new Chart(document.getElementById('bmiChart'), {
-            type: 'line',
-            data: { labels, datasets: [{ label: 'BMI', data: bmis, borderColor: '#10b981', tension: 0.3, fill: true, backgroundColor: 'rgba(16, 185, 129, 0.1)' }] },
-            options: { maintainAspectRatio: false, plugins: { legend: { display: false }, title: { display: true, text: 'BMI Trend' } } }
+        combinedChart = new Chart(document.getElementById('combinedChart'), {
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        type: 'bar',
+                        label: 'Weight (kg)',
+                        data: weights,
+                        backgroundColor: 'rgba(37, 99, 235, 0.7)',
+                        borderRadius: 6,
+                        yAxisID: 'y',
+                    },
+                    {
+                        type: 'line',
+                        label: 'BMI',
+                        data: bmis,
+                        borderColor: '#10b981',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#10b981',
+                        tension: 0.4,
+                        yAxisID: 'y1',
+                    }
+                ]
+            },
+            options: {
+                maintainAspectRatio: false,
+                responsive: true,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: { boxWidth: 10, font: { size: 10, weight: 'bold' } }
+                    },
+                    title: { display: true, text: 'Progress Overview' }
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: { display: true, text: 'Weight (kg)', font: { size: 10 } }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        grid: { drawOnChartArea: false },
+                        title: { display: true, text: 'BMI', font: { size: 10 } }
+                    }
+                }
+            }
         });
     }
 
