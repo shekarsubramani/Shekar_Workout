@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Flow - Weight Loss Tracker</title>
+    <style>
+        :root { --primary: #2563eb; --bg: #f8fafc; --card: #ffffff; }
+        body { font-family: -apple-system, sans-serif; background: var(--bg); margin: 0; padding: 20px; padding-bottom: 80px; }
+        .card { background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .hidden { display: none; }
+        h2 { color: #1e293b; margin-top: 0; }
+        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        button { background: var(--primary); color: white; font-weight: bold; border: none; cursor: pointer; }
+        .nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #ddd; }
+        .nav-item { cursor: pointer; color: #64748b; font-size: 0.8rem; text-align: center; }
+        .workout-item { border-left: 4px solid var(--primary); padding-left: 10px; margin: 10px 0; background: #eff6ff; padding: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+    <div id="setup-screen" class="card">
+        <h2>Welcome! Let's get started.</h2>
+        <p>Your goal: Weight Loss (3-Month Aim)</p>
+        <input type="text" id="user-name" placeholder="Full Name">
+        <input type="number" id="user-weight" placeholder="Current Weight (kg)">
+        <button onclick="saveProfile()">Create My Plan</button>
+    </div>
+
+    <div id="main-app" class="hidden">
+        <div id="dashboard-view">
+            <h2 id="welcome-msg">Hi, User!</h2>
+            <div class="card">
+                <h3>Current Aim</h3>
+                <p id="aim-text">Lose weight & increase mobility over next 3 months.</p>
+            </div>
+            
+            <div class="card">
+                <h3>Today's Recommended Workout</h3>
+                <div id="suggestion">Loading your plan...</div>
+            </div>
+
+            <div class="card">
+                <h3>Log Treadmill Run</h3>
+                <input type="number" id="tm-minutes" placeholder="Minutes">
+                <input type="number" id="tm-incline" placeholder="Incline %">
+                <button onclick="logWorkout('Treadmill')">Save Session</button>
+            </div>
+        </div>
+
+        <div id="history-view" class="hidden">
+            <h2>Your Progress</h2>
+            <div id="history-list"></div>
+        </div>
+    </div>
+
+    <div class="nav">
+        <div class="nav-item" onclick="showTab('dashboard')">🏠<br>Home</div>
+        <div class="nav-item" onclick="showTab('history')">📊<br>History</div>
+        <div class="nav-item" onclick="resetApp()">⚙️<br>Reset</div>
+    </div>
+
+    <script>
+        let userData = JSON.parse(localStorage.getItem('fitnessData')) || null;
+
+        function init() {
+            if(userData) {
+                document.getElementById('setup-screen').classList.add('hidden');
+                document.getElementById('main-app').classList.remove('hidden');
+                document.getElementById('welcome-msg').innerText = `Hi, ${userData.name}!`;
+                renderSuggestions();
+                renderHistory();
+            }
+        }
+
+        function saveProfile() {
+            const name = document.getElementById('user-name').value;
+            const weight = document.getElementById('user-weight').value;
+            if(!name || !weight) return alert("Please fill details");
+            
+            userData = { name, weight, history: [] };
+            localStorage.setItem('fitnessData', JSON.stringify(userData));
+            init();
+        }
+
+        function renderSuggestions() {
+            const plans = [
+                "Seated Leg Press & Lat Pulldowns (3 sets of 12)",
+                "30-min Treadmill Walk: 3.5 km/h @ 2% Incline",
+                "Dumbbell Chest Press & Seated Rows (Low weight, high rep)",
+                "Swimming or Stationary Bike (20 mins)"
+            ];
+            document.getElementById('suggestion').innerText = plans[Math.floor(Math.random() * plans.length)];
+        }
+
+        function logWorkout(type) {
+            const mins = document.getElementById('tm-minutes').value;
+            if(!mins) return;
+            userData.history.push({ type, mins, date: new Date().toLocaleDateString() });
+            localStorage.setItem('fitnessData', JSON.stringify(userData));
+            alert("Workout Saved!");
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('history-list');
+            list.innerHTML = userData.history.map(item => `
+                <div class="workout-item">
+                    <strong>${item.date}</strong>: ${item.type} - ${item.mins} mins
+                </div>
+            `).join('');
+        }
+
+        function showTab(tab) {
+            document.getElementById('dashboard-view').classList.toggle('hidden', tab !== 'dashboard');
+            document.getElementById('history-view').classList.toggle('hidden', tab !== 'history');
+        }
+
+        function resetApp() {
+            if(confirm("Reset all data?")) {
+                localStorage.clear();
+                location.reload();
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
