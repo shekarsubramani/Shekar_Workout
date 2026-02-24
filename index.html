@@ -15,39 +15,35 @@
         body { font-family: 'Inter', -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; overflow-x: hidden; }
         .container { padding: 15px; max-width: 500px; margin: 0 auto; padding-bottom: 100px; width: 100%; }
         
-        /* Splash & Setup Branding */
+        /* Splash & Branding */
         #splash-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--primary); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 5000; transition: opacity 0.6s ease; }
         .logo-box { font-size: 60px; margin-bottom: 10px; text-align: center; }
         .pulse { animation: pulse 1.5s infinite; }
         @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
         
-        /* Layout */
-        .card { background: var(--card); padding: 20px; border-radius: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid var(--border); margin-bottom: 15px; width: 100%; }
-        .hidden { display: none !important; }
+        /* Profile Modal */
+        #profile-modal { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 4600; transition: bottom 0.4s ease; display: flex; align-items: flex-end; }
+        #profile-modal.active { bottom: 0; }
+        .modal-content { background: white; width: 100%; max-width: 500px; margin: 0 auto; border-radius: 24px 24px 0 0; padding: 25px; box-shadow: 0 -10px 25px rgba(0,0,0,0.1); }
         
-        /* Responsive Charts */
-        .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; width: 100%; }
-        .mini-chart-card { background: white; border-radius: 14px; padding: 8px; border: 1px solid var(--border); height: 100px; min-width: 0; cursor: pointer; position: relative; overflow: hidden; }
-        canvas { width: 100% !important; height: 100% !important; }
+        /* Header */
+        .header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .profile-btn { width: 40px; height: 40px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
 
-        /* Full Screen Chart View */
-        .chart-fullscreen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 4500; padding: 20px; display: flex; flex-direction: column; }
-        .full-chart-box { flex: 1; width: 100%; position: relative; }
+        /* Layout & UI */
+        .card { background: var(--card); padding: 20px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 15px; }
+        .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .mini-chart-card { background: white; border-radius: 14px; padding: 8px; border: 1px solid var(--border); height: 100px; cursor: pointer; }
+        .workout-box { font-size: 0.85rem; line-height: 1.6; background: #f1f5f9; padding: 12px; border-radius: 12px; white-space: pre-line; border-left: 4px solid var(--accent); }
+        .hidden { display: none !important; }
 
-        /* Targets & Icons */
-        .target-header { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: 700; }
-        .target-icon { font-size: 1.2rem; }
-        .checkin-item { display: flex; align-items: center; padding: 12px; background: white; border-radius: 14px; margin-bottom: 8px; cursor: pointer; border: 1px solid var(--border); gap: 10px; }
-
-        /* Navigation */
+        /* Nav */
         .nav { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: white; display: flex; border-top: 1px solid var(--border); left: 50%; transform: translateX(-50%); z-index: 1000; height: 65px; align-items: center; }
-        .nav-item { flex: 1; text-align: center; cursor: pointer; font-size: 0.7rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; }
+        .nav-item { flex: 1; text-align: center; cursor: pointer; font-size: 0.7rem; font-weight: 800; color: #94a3b8; }
         .nav-item.active { color: var(--accent); }
 
-        /* Setup Screen specifics */
-        #setup-screen { text-align: center; margin-top: 20vh; }
         input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid var(--border); border-radius: 10px; font-size: 1rem; }
-        button { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; }
+        button { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -57,23 +53,33 @@
     <h2 style="color:white; font-weight:300; letter-spacing:4px; text-align: center;">SHEKAR<br>FITNESS LOG</h2>
 </div>
 
-<div id="fullscreen-chart-view" class="chart-fullscreen hidden">
-    <div onclick="closeChart()" style="cursor:pointer; color:var(--accent); font-weight:700; margin-bottom:20px;">← BACK</div>
-    <h2 id="full-chart-title">Chart View</h2>
-    <div class="full-chart-box">
-        <canvas id="fullChartCanvas"></canvas>
+<div id="profile-modal" onclick="toggleProfile(false)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            <h3 style="margin:0">Profile Settings</h3>
+            <span onclick="toggleProfile(false)" style="font-size:1.5rem; cursor:pointer;">&times;</span>
+        </div>
+        <label style="font-size:0.8rem; color:#64748b; font-weight:700;">NAME</label>
+        <input type="text" id="prof-name">
+        <label style="font-size:0.8rem; color:#64748b; font-weight:700;">WEIGHT (KG)</label>
+        <input type="number" id="prof-weight">
+        <label style="font-size:0.8rem; color:#64748b; font-weight:700;">HEIGHT (CM)</label>
+        <input type="number" id="prof-height">
+        <button onclick="updateProfile()" style="background:var(--accent)">Save Changes</button>
+        <button onclick="resetAll()" style="background:none; color:var(--danger); border:1px solid var(--danger); margin-top:10px;">Reset All Data</button>
     </div>
 </div>
 
-<div id="detail-view" style="position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg); z-index:4000; padding:20px; overflow-y:auto;" class="hidden">
-    <div onclick="closeDetail()" style="cursor:pointer; color:var(--accent); font-weight:700; margin-bottom:20px;">← BACK</div>
-    <div id="detail-body"></div>
+<div id="fullscreen-chart-view" style="position:fixed; top:0; left:0; width:100%; height:100%; background:white; z-index:4500; padding:20px; display:flex; flex-direction:column;" class="hidden">
+    <div onclick="closeChart()" style="cursor:pointer; color:var(--accent); font-weight:700; margin-bottom:20px;">← BACK</div>
+    <h2 id="full-chart-title">Trend</h2>
+    <div style="flex:1; position:relative;"><canvas id="fullChartCanvas"></canvas></div>
 </div>
 
 <div class="container">
-    <div id="setup-screen" class="card hidden">
+    <div id="setup-screen" class="card hidden" style="text-align:center; margin-top:15vh;">
         <div class="logo-box">🏋️‍♂️</div>
-        <h2 style="margin-top:0">Setup Profile</h2>
+        <h2>Setup Profile</h2>
         <input type="text" id="setup-name" placeholder="Full Name">
         <input type="number" id="setup-weight" placeholder="Weight (kg)">
         <input type="number" id="setup-height" placeholder="Height (cm)">
@@ -81,49 +87,45 @@
     </div>
 
     <div id="main-app" class="hidden">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+        <div class="header-row">
             <div>
-                <div id="day-header" style="color:var(--accent); font-weight:800; font-size:0.7rem;"></div>
-                <h1 id="welcome-msg" style="margin:0; font-size:1.2rem;">Hello</h1>
+                <div id="day-header" style="color:var(--accent); font-weight:800; font-size:0.7rem; text-transform:uppercase;"></div>
+                <h1 id="welcome-msg" style="margin:0; font-size:1.3rem;">Welcome</h1>
             </div>
-            <div onclick="resetAll()" style="font-size:0.7rem; color:var(--danger); cursor:pointer;">RESET ALL</div>
+            <div class="profile-btn" onclick="toggleProfile(true)">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08s5.97 1.09 6 3.08c-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+            </div>
         </div>
 
-        <div class="charts-row" id="charts-dashboard-row">
-            <div class="mini-chart-card" onclick="zoomChart('weight')">
-                <canvas id="miniWeightChart"></canvas>
-            </div>
-            <div class="mini-chart-card" onclick="zoomChart('bmi')">
-                <canvas id="miniBmiChart"></canvas>
-            </div>
+        <div class="charts-row">
+            <div class="mini-chart-card" onclick="zoomChart('weight')"><canvas id="miniWeightChart"></canvas></div>
+            <div class="mini-chart-card" onclick="zoomChart('bmi')"><canvas id="miniBmiChart"></canvas></div>
         </div>
 
         <div id="home-view">
-            <div class="card" style="padding:15px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                    <div class="target-header">
-                        <span class="target-icon">🎯</span>
-                        <span>Target: <span id="muscle-group" style="color:var(--accent)"></span></span>
-                    </div>
-                    <span style="font-size:0.6rem; color:var(--accent); border:1px solid var(--accent); padding:2px 5px; border-radius:4px; cursor:pointer;" onclick="toggleEdit()">EDIT</span>
+            <div class="card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <div id="target-header" style="display:flex; align-items:center; gap:8px; font-weight:800;"></div>
+                    <span style="font-size:0.6rem; color:var(--accent); font-weight:800; border:1.5px solid var(--accent); padding:2px 6px; border-radius:4px; cursor:pointer;" onclick="toggleEdit()">EDIT</span>
                 </div>
-                <div id="workout-display" style="font-size:0.85rem; line-height:1.5; background:#f1f5f9; padding:10px; border-radius:8px; white-space:pre-line;"></div>
+                <div id="workout-display" class="workout-box"></div>
                 <div id="edit-area" class="hidden" style="margin-top:10px;">
-                    <textarea id="custom-workout-input" rows="4" style="width:100%; border-radius:8px; border:1px solid var(--border); padding:8px;"></textarea>
-                    <button style="background:var(--success); padding:10px; margin-top:5px;" onclick="saveCustomWorkout()">Save</button>
+                    <textarea id="custom-workout-input" rows="5" style="width:100%; border-radius:10px; border:1px solid var(--border); padding:10px;"></textarea>
+                    <button style="background:var(--success)" onclick="saveCustomWorkout()">Update Schedule</button>
                 </div>
             </div>
 
-            <h3 style="margin:15px 0 10px 0; font-size:0.75rem; text-transform:uppercase; color:#64748b;">Daily Warm-up</h3>
-            <div class="checkin-item" onclick="openDetail('stretching')">🧘‍♂️ <b>Stretching</b></div>
-            <div class="checkin-item" onclick="openDetail('hiit')">⚡ <b>HIIT</b></div>
-            <div class="checkin-item" onclick="openDetail('treadmill')">👟 <b>Treadmill</b></div>
+            <h3 style="margin:20px 0 10px 0; font-size:0.75rem; text-transform:uppercase; color:#64748b;">Daily Warm-up</h3>
+            <div class="card" style="padding:12px; display:flex; gap:10px; flex-direction:column; background:none; border:none;">
+                <div style="display:flex; align-items:center; padding:12px; background:white; border-radius:14px; border:1px solid var(--border); gap:10px; cursor:pointer;" onclick="alert('Routine: Hamstring, Quad, Neck, Shoulder stretches.')">🧘‍♂️ Stretching</div>
+                <div style="display:flex; align-items:center; padding:12px; background:white; border-radius:14px; border:1px solid var(--border); gap:10px; cursor:pointer;" onclick="alert('Routine: 30s Sprints, 20 Burpees, Jump Squats.')">⚡ HIIT Cardio</div>
+            </div>
 
-            <button onclick="promptWeight()" style="margin-top:15px;">⚖️ Log Weight Update</button>
+            <button onclick="promptWeight()">⚖️ Update Current Weight</button>
         </div>
 
         <div id="history-view" class="hidden">
-            <h3>Log History</h3>
+            <h3>Weight History</h3>
             <div id="history-list"></div>
         </div>
     </div>
@@ -135,15 +137,18 @@
 </div>
 
 <script>
-    let miniW, miniB, fullC;
-    const detailData = {
-        stretching: { title: "Stretching", list: ["Hamstring Stretch","Quadriceps Stretch","Neck Stretch","Shoulder Stretch","Cat-Cow Stretch","Knee-to-Chest","Hip Flexor Lunge","Child’s Pose"] },
-        hiit: { title: "HIIT", list: ["Sprinting","Jump Squats","Burpees","Mountain Climbers","Kettlebell Swings"] },
-        treadmill: { title: "Treadmill Walk", list: ["Speed: 3.0-4.0 mph","Incline: 1.0-2.0%","Duration: 30-60m","Step Goal: 100/min"] }
+    const schedule = {
+        "Monday": {area: "Chest", icon: "胸", plan: "• Seated Machine Press (3x12)\n• Pec Deck Fly (3x15)\n• Incline Machine Press (3x12)\n• Low-to-High Cable Fly (3x15)"},
+        "Tuesday": {area: "Back", icon: "背", plan: "• Lat Pulldown (Wide) (3x12)\n• Seated Cable Row (3x12)\n• Machine Assisted Pullups (3x10)\n• Face Pulls (3x15)"},
+        "Wednesday": {area: "Biceps", icon: "腕", plan: "• Seated DB Curls (3x12)\n• Hammer Curls (3x12)\n• EZ-Bar Preacher Curls (3x10)\n• Cable Rope Curls (3x15)"},
+        "Thursday": {area: "Triceps", icon: "肘", plan: "• Rope Pushdowns (3x15)\n• Overhead Machine Ext (3x12)\n• Bench Dips (3x12)\n• Plank (3x45s)"},
+        "Friday": {area: "Shoulders", icon: "肩", plan: "• Seated Machine Press (3x12)\n• Lateral Raises (3x15)\n• Rear Delt Fly (3x12)\n• DB Front Raises (3x12)"},
+        "Saturday": {area: "Legs", icon: "脚", plan: "• Seated Leg Press (4x15)\n• Leg Extensions (3x12)\n• Seated Leg Curls (3x12)\n• Wall Sits (3x30s)"},
+        "Sunday": {area: "Rest", icon: "休", plan: "• 20 min Recovery Walk\n• Full Body Stretching\n• Foam Rolling"}
     };
-    const schedule = { "Monday":"Chest", "Tuesday":"Back", "Wednesday":"Biceps", "Thursday":"Triceps/Abs", "Friday":"Shoulders", "Saturday":"Legs", "Sunday":"Rest" };
 
     let data = JSON.parse(localStorage.getItem('shekarAppData')) || null;
+    let miniW, miniB, fullC;
 
     window.onload = () => {
         setTimeout(() => {
@@ -160,97 +165,94 @@
         document.getElementById('setup-screen').classList.add('hidden');
         document.getElementById('main-app').classList.remove('hidden');
         document.getElementById('bottom-nav').classList.remove('hidden');
-        const now = new Date();
-        document.getElementById('day-header').innerText = now.toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'short'});
-        document.getElementById('welcome-msg').innerText = `Welcome, ${data.name.split(' ')[0]}`;
-        document.getElementById('muscle-group').innerText = schedule[new Intl.DateTimeFormat('en-US', {weekday:'long'}).format(now)];
-        document.getElementById('workout-display').innerText = data.customPlans?.[new Intl.DateTimeFormat('en-US', {weekday:'long'}).format(now)] || "Tap edit to add your specific plan for today.";
+        
+        const day = new Intl.DateTimeFormat('en-US', {weekday:'long'}).format(new Date());
+        document.getElementById('day-header').innerText = new Date().toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'short'});
+        document.getElementById('welcome-msg').innerText = `Hello, ${data.name.split(' ')[0]}`;
+        
+        document.getElementById('target-header').innerHTML = `🎯 Target: <span style="color:var(--accent)">${schedule[day].area}</span>`;
+        document.getElementById('workout-display').innerText = data.customPlans?.[day] || schedule[day].plan;
+        
         renderCharts();
+    }
+
+    function toggleProfile(show) {
+        const modal = document.getElementById('profile-modal');
+        if(show) {
+            document.getElementById('prof-name').value = data.name;
+            document.getElementById('prof-weight').value = data.weight;
+            document.getElementById('prof-height').value = data.height;
+            modal.classList.add('active');
+        } else {
+            modal.classList.remove('active');
+        }
+    }
+
+    function updateProfile() {
+        data.name = document.getElementById('prof-name').value;
+        data.weight = parseFloat(document.getElementById('prof-weight').value);
+        data.height = parseFloat(document.getElementById('prof-height').value);
+        localStorage.setItem('shekarAppData', JSON.stringify(data));
+        init();
+        toggleProfile(false);
     }
 
     function renderCharts() {
         const labels = data.history.map(h => h.date);
         const weights = data.history.map(h => h.val);
         const bmis = data.history.map(h => (h.val / ((data.height/100)**2)).toFixed(1));
+        const cfg = { maintainAspectRatio: false, plugins: { legend: {display:false} }, scales: { x:{display:false}, y:{display:false} } };
 
-        if (miniW) miniW.destroy();
-        if (miniB) miniB.destroy();
-
-        const options = { maintainAspectRatio: false, plugins: { legend: {display:false} }, scales: { x: {display:false}, y: {display:false} } };
-
-        miniW = new Chart(document.getElementById('miniWeightChart'), {
-            type: 'bar',
-            data: { labels, datasets: [{ data: weights, backgroundColor: '#2563eb' }] },
-            options: { ...options, plugins: { title: {display:true, text:'Weight (kg)', font:{size:10}} } }
-        });
-
-        miniB = new Chart(document.getElementById('miniBmiChart'), {
-            type: 'line',
-            data: { labels, datasets: [{ data: bmis, borderColor: '#10b981', tension: 0.3, pointRadius:0 }] },
-            options: { ...options, plugins: { title: {display:true, text:'BMI Trend', font:{size:10}} } }
-        });
+        if(miniW) miniW.destroy(); if(miniB) miniB.destroy();
+        miniW = new Chart(document.getElementById('miniWeightChart'), { type:'bar', data:{labels, datasets:[{data:weights, backgroundColor:'#2563eb'}]}, options:cfg });
+        miniB = new Chart(document.getElementById('miniBmiChart'), { type:'line', data:{labels, datasets:[{data:bmis, borderColor:'#10b981', tension:0.4, pointRadius:0}]}, options:cfg });
     }
 
     function zoomChart(type) {
         document.getElementById('fullscreen-chart-view').classList.remove('hidden');
         const labels = data.history.map(h => h.date);
         const dataset = type === 'weight' ? 
-            { label: 'Weight (kg)', data: data.history.map(h => h.val), color: '#2563eb' } :
-            { label: 'BMI', data: data.history.map(h => (h.val / ((data.height/100)**2)).toFixed(1)), color: '#10b981' };
-
-        if (fullC) fullC.destroy();
-        fullC = new Chart(document.getElementById('fullChartCanvas'), {
-            type: type === 'weight' ? 'bar' : 'line',
-            data: { labels, datasets: [{ ...dataset, borderColor: dataset.color, backgroundColor: dataset.color + '33', fill: true }] },
-            options: { maintainAspectRatio: false }
-        });
+            { label:'Weight (kg)', data:data.history.map(h => h.val), color:'#2563eb' } : 
+            { label:'BMI', data:data.history.map(h => (h.val/((data.height/100)**2)).toFixed(1)), color:'#10b981' };
+        
+        if(fullC) fullC.destroy();
+        fullC = new Chart(document.getElementById('fullChartCanvas'), { type: type==='weight'?'bar':'line', data:{labels, datasets:[{...dataset, borderColor:dataset.color, backgroundColor:dataset.color+'22', fill:true}]}, options:{maintainAspectRatio:false} });
     }
 
     function closeChart() { document.getElementById('fullscreen-chart-view').classList.add('hidden'); }
-
     function saveInitialProfile() {
         const w = parseFloat(document.getElementById('setup-weight').value);
         const h = parseFloat(document.getElementById('setup-height').value);
         const n = document.getElementById('setup-name').value;
-        if(!n || !w || !h) return alert("Fill all fields");
-        data = { name: n, weight: w, height: h, history: [{date: new Date().toLocaleDateString('en-GB', {day:'numeric', month:'short'}), val: w}], customPlans: {} };
+        if(!n || !w || !h) return alert("Please fill all fields");
+        data = { name:n, weight:w, height:h, history:[{date:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short'}), val:w}], customPlans:{} };
         localStorage.setItem('shekarAppData', JSON.stringify(data)); init();
     }
-
     function promptWeight() {
-        const nw = prompt("New Weight (kg):");
-        if(nw) {
+        const nw = prompt("Update Weight (kg):");
+        if(nw && !isNaN(nw)) {
+            data.weight = parseFloat(nw);
             data.history.push({ date: new Date().toLocaleDateString('en-GB', {day:'numeric', month:'short'}), val: parseFloat(nw) });
-            if(data.history.length > 10) data.history.shift();
+            if(data.history.length > 8) data.history.shift();
             localStorage.setItem('shekarAppData', JSON.stringify(data));
             renderCharts();
         }
     }
-
-    function openDetail(key) {
-        const item = detailData[key];
-        document.getElementById('detail-body').innerHTML = `<h2>${item.title}</h2><ul>${item.list.map(l => `<li style="margin-bottom:10px;">${l}</li>`).join('')}</ul>`;
-        document.getElementById('detail-view').classList.remove('hidden');
-    }
-    function closeDetail() { document.getElementById('detail-view').classList.add('hidden'); }
     function toggleEdit() { document.getElementById('edit-area').classList.toggle('hidden'); }
     function saveCustomWorkout() {
-        const today = new Intl.DateTimeFormat('en-US', {weekday:'long'}).format(new Date());
-        data.customPlans[today] = document.getElementById('custom-workout-input').value;
+        const day = new Intl.DateTimeFormat('en-US', {weekday:'long'}).format(new Date());
+        data.customPlans[day] = document.getElementById('custom-workout-input').value;
         localStorage.setItem('shekarAppData', JSON.stringify(data));
         init(); toggleEdit();
     }
-    function showView(view) {
-        document.getElementById('home-view').classList.toggle('hidden', view !== 'home');
-        document.getElementById('history-view').classList.toggle('hidden', view !== 'history');
-        document.getElementById('charts-dashboard-row').classList.toggle('hidden', view !== 'home');
-        document.getElementById('nav-home').classList.toggle('active', view === 'home');
-        document.getElementById('nav-logs').classList.toggle('active', view === 'history');
-        if(view === 'history') {
-            document.getElementById('history-list').innerHTML = data.history.map(h => `<div style="padding:10px; border-bottom:1px solid var(--border)"><b>${h.date}</b>: ${h.val}kg</div>`).reverse().join('');
-        }
+    function showView(v) {
+        document.getElementById('home-view').classList.toggle('hidden', v!=='home');
+        document.getElementById('history-view').classList.toggle('hidden', v!=='history');
+        document.getElementById('nav-home').classList.toggle('active', v==='home');
+        document.getElementById('nav-logs').classList.toggle('active', v==='history');
+        if(v==='history') document.getElementById('history-list').innerHTML = data.history.map(h => `<div style="padding:12px; border-bottom:1px solid var(--border)"><b>${h.date}</b>: ${h.val}kg</div>`).reverse().join('');
     }
-    function resetAll() { if(confirm("Erase all logs?")) { localStorage.clear(); location.reload(); } }
+    function resetAll() { if(confirm("Erase all data?")) { localStorage.clear(); location.reload(); } }
 </script>
 </body>
 </html>
